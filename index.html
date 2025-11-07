@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mtg utilitaires</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#0f1115">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="static\css\styles.css" />
+</head>
+
+<body>
+    <header class="app-header" role="banner">
+        <h1 class="app-title">Mtg utilitaires</h1>
+    </header>
+
+    <main class="app-main" role="main">
+        <!-- Accueil -->
+        <section class="view" data-view="home" aria-labelledby="home-title">
+            <h2 id="home-title" class="sr-only">Accueil</h2>
+            <section class="section">
+                <details class="dropdown" name="lazy-maths" open>
+                    <summary class="dropdown__summary">
+                        <span class="dropdown__label">Lazy maths</span>
+                        <span class="chevron" aria-hidden="true"></span>
+                    </summary>
+                    <div class="dropdown__content">
+                        <a href="#starting-rolls" class="list-item">
+                            <span class="list-item__title">Starting rolls</span>
+                            <span class="list-item__hint">Lancer initial / initiative</span>
+                        </a>
+                        <a href="#shard-maths" class="list-item">
+                            <span class="list-item__title">Shard maths</span>
+                            <span class="list-item__hint">Calculs rapides pour shards</span>
+                        </a>
+                        <a href="#any-number-random" class="list-item">
+                            <span class="list-item__title">Any number random</span>
+                            <span class="list-item__hint">Rouler un nombre de 1 à X</span>
+                        </a>
+                    </div>
+                </details>
+            </section>
+        </section>
+
+        <!-- Starting rolls -->
+        <section class="view" data-view="starting-rolls" aria-labelledby="starting-rolls-title" hidden>
+            <header class="subheader">
+                <a href="#home" class="back-btn" aria-label="Retour à l'accueil">←</a>
+                <h2 id="starting-rolls-title" class="subheader__title">Starting rolls</h2>
+            </header>
+
+            <div class="center">
+                <button type="button" class="cta" id="btn-lancer-starting"
+                    aria-describedby="sr-starting-hint">Lancer</button>
+                <span id="sr-starting-hint" class="sr-only">Anime deux dés par case, en sens horaire, puis affiche le
+                    total.</span>
+            </div>
+
+            <!-- Grille 2x2 -->
+            <div class="roll-grid" role="region" aria-label="Résultats du lancer">
+                <!-- H-G Rouge -->
+                <div class="roll-cell roll-red" id="cell-red" aria-live="polite" aria-label="Rouge">
+                    <div class="cell-inner">
+                        <div class="dice-slot"></div>
+                        <div class="total" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <!-- H-D Bleu -->
+                <div class="roll-cell roll-blue" id="cell-blue" aria-live="polite" aria-label="Bleu">
+                    <div class="cell-inner">
+                        <div class="dice-slot"></div>
+                        <div class="total" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <!-- B-D Jaune -->
+                <div class="roll-cell roll-yellow" id="cell-yellow" aria-live="polite" aria-label="Jaune">
+                    <div class="cell-inner">
+                        <div class="dice-slot"></div>
+                        <div class="total" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <!-- B-G Vert -->
+                <div class="roll-cell roll-green" id="cell-green" aria-live="polite" aria-label="Vert">
+                    <div class="cell-inner">
+                        <div class="dice-slot"></div>
+                        <div class="total" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shard maths (structure déjà prête) -->
+        <section class="view" data-view="shard-maths" aria-labelledby="shard-maths-title" hidden>
+            <header class="subheader">
+                <a href="#home" class="back-btn" aria-label="Retour à l'accueil">←</a>
+                <h2 id="shard-maths-title" class="subheader__title">Shard maths</h2>
+            </header>
+
+            <form class="card form-grid" id="form-shard-maths" novalidate>
+                <div class="field">
+                    <label class="label">Créature</label>
+
+                    <div class="select-like">
+                        <input id="creature-display" class="input-display" type="text" readonly
+                            placeholder="Aucune créature" />
+                        <button type="button" class="btn-secondary ctb" id="open-creature-sheet">Choisir</button>
+                    </div>
+
+                    <input id="creature" name="creature" type="hidden" />
+                </div>
+                <div class="field">
+                    <label for="opponents" class="label">Nombre d’opponents</label>
+                    <select id="opponents" name="opponents" class="select" required>
+                        <option value="" selected disabled>— Choisir —</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="shards" class="label">Nombre de shards</label>
+                    <select id="shards" name="shards" class="select" required>
+                        <option value="" selected disabled>— Choisir —</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                    </select>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="cta">Lancer le calcul</button>
+                </div>
+            </form>
+            <div id="shard-result" class="result-box" aria-live="polite"></div>
+        </section>
+
+        <!-- DROPDOWN / SHEET plein-écran -->
+        <div id="creature-sheet" class="sheet" aria-hidden="true">
+            <div class="sheet__backdrop" data-close></div>
+            <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="creature-sheet-title">
+                <header class="sheet__header">
+                    <span class="sheet__handle" aria-hidden="true"></span>
+                    <h3 id="creature-sheet-title" class="sheet__title ctb">Choisir une créature</h3>
+                    <button type="button" class="sheet__close" title="Fermer" aria-label="Fermer" data-close>×</button>
+                </header>
+
+                <div class="sheet__body">
+                    <div class="card-grid" id="creature-grid">
+                        <!-- 14 placeholders (remplace par tes images plus tard) -->
+                        <!-- 1..14 -->
+                        <article class="creature-card" data-value="soltari-champion">
+                            <div class="card-img placeholder">
+                                <img src="static\img\soltari-champion.jpg" alt="">
+                            </div>
+                            <div class="card-title">Soltari Champion</div>
+                        </article>
+                        <article class="creature-card" data-value="ultramarines-honour-guard">
+                            <div class="card-img placeholder">
+                                <img src="static\img\ultramarines-honour-guard.jpg" alt="">
+                            </div>
+                            <div class="card-title">Ultramarines honour guard</div>
+                        </article>
+                        <article class="creature-card" data-value="skyhunter-strike-force">
+                            <div class="card-img placeholder">
+                                <img src="static\img\skyhunter-strike-force.jpg" alt="">
+                            </div>
+                            <div class="card-title">Skyhunter strike force</div>
+                        </article>
+                        <article class="creature-card" data-value="curiosity-crafter">
+                            <div class="card-img placeholder">
+                                <img src="static\img\curiosity-crafter.jpg" alt="">
+                            </div>
+                            <div class="card-title">Curiosity crafter</div>
+                        </article>
+                        <article class="creature-card" data-value="enduring-curiosity">
+                            <div class="card-img placeholder">
+                                <img src="static\img\enduring-curiosity.jpg" alt="">
+                            </div>
+                            <div class="card-title">Enduring-curiosity</div>
+                        </article>
+                        <article class="creature-card" data-value="dream-trawler">
+                            <div class="card-img placeholder">
+                                <img src="static\img\dream-trawler.jpg" alt="">
+                            </div>
+                            <div class="card-title">Dream trawler</div>
+                        </article>
+                        <article class="creature-card" data-value="nesting-dovehawk">
+                            <div class="card-img placeholder">
+                                <img src="static\img\nesting-dovehawk.jpg" alt="">
+                            </div>
+                            <div class="card-title">Nesting dovehawk</div>
+                        </article>
+                        <article class="creature-card" data-value="hero-of-bladehold">
+                            <div class="card-img placeholder">
+                                <img src="static\img\hero-of-bladehold.jpg" alt="">
+                            </div>
+                            <div class="card-title">Hero of bladehold</div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="view" data-view="any-number-random" hidden>
+            <header class="subheader">
+                <a href="#home" class="back-btn" aria-label="Retour à l'accueil">←</a>
+                <h2>Any number random</h2>
+            </header>
+
+            <div class="page-content">
+                <label for="max-number" class="label">Choisis la borne maximale :</label>
+                <input type="number" id="max-number" min="2" max="9999" value="6" class="input-number" />
+
+                <input type="range" id="max-number-slider" min="2" max="50" value="6" class="input-slider" />
+
+                <button id="btn-roll-any" class="btn-primary">Roll</button>
+
+                <div id="any-roll-result" class="roll-result">–</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <small>Copyright LeyLineDev @François Poulin</small>
+    </footer>
+
+    <!-- Overlay global pour l'animation des dés (tombe -> rebond -> retombe) -->
+    <div id="dice-overlay" aria-hidden="true"></div>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").catch(console.error);
+            });
+        }
+        /* ===== Routeur hash (1-pager) ===== */
+        (function () {
+            const views = Array.from(document.querySelectorAll('.view'));
+            const dropdown = document.querySelector('details[name="lazy-maths"]');
+            function show(viewName) {
+                for (const v of views) v.hidden = (v.dataset.view !== viewName);
+                if (dropdown) dropdown.open = false; // page d’accueil toujours propre
+            }
+            function current() {
+                const h = (location.hash || '#home').slice(1);
+                return views.some(v => v.dataset.view === h) ? h : 'home';
+            }
+            addEventListener('hashchange', () => show(current()));
+            show(current());
+        })();
+
+        /* ===== Utils ===== */
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+        const d6 = () => Math.floor(Math.random() * 6) + 1;
+
+        /* ===== Starting rolls + Tie-breaker Commander ===== */
+        (function () {
+            const btn = document.getElementById('btn-lancer-starting');
+            const overlay = document.getElementById('dice-overlay');
+
+            // Cases dans l’ordre horaire
+            const CELLS = [
+                document.getElementById('cell-red'),
+                document.getElementById('cell-blue'),
+                document.getElementById('cell-yellow'),
+                document.getElementById('cell-green')
+            ];
+
+            // Anim quad (avec upright au final) → doit matcher ton CSS
+            const DUR_MS = 1300;
+            const IMPACT1_T = 0.62;
+            const IMPACT2_T = 0.86;
+            const IMPACT3_T = 0.965;
+            const FINAL_T = 0.995;
+
+            const T1_MS = Math.floor(DUR_MS * IMPACT1_T);
+            const T2_MS = Math.floor(DUR_MS * IMPACT2_T);
+            const T3_MS = Math.floor(DUR_MS * IMPACT3_T);
+            const TFINAL = Math.floor(DUR_MS * FINAL_T);
+            const HOLD_ON_OVERLAY_MS = 300; // pause lisibilité
+
+            // État du tie-break
+            let tiebreakActive = false;
+            let tiedCells = [];
+
+            if (btn) btn.addEventListener('click', onClick);
+
+            async function onClick() {
+                btn.disabled = true;
+
+                if (!tiebreakActive) {
+                    // Premier tour : tout le monde lance
+                    resetAllCells();
+                    clearTieHighlights();
+                    clearWinnerHighlight();
+
+                    await rollSequence(CELLS);
+
+                    // Cherche égalités max sur TOUTES les cases
+                    const valuesAll = readTotalsFor(CELLS);
+                    const { max, idxs } = findTies(valuesAll);
+
+                    if (idxs.length > 1) {
+                        // égalité → on active le tie-break (sous-ensemble)
+                        tiebreakActive = true;
+                        tiedCells = idxs.map(i => CELLS[i]);
+                        btn.textContent = 'Break the tie';
+                        highlightTiedCells(tiedCells);
+                    } else {
+                        // vainqueur clair dès le départ
+                        tiebreakActive = false;
+                        tiedCells = [];
+                        btn.textContent = 'Lancer';
+                        clearTieHighlights();
+                        celebrateWinner(CELLS[idxs[0]]);
+                    }
+                } else {
+                    // tie-break actif : NE comparer que les relanceurs
+                    clearTieHighlights();
+                    clearWinnerHighlight();
+
+                    await rollSequence(tiedCells);
+
+                    // ⚠️ ICI la différence importante :
+                    // On lit uniquement les totaux des cases en tie et on détermine le gagnant parmi EUX.
+                    const valuesTie = readTotalsFor(tiedCells);
+                    const { max, idxs } = findTies(valuesTie);
+
+                    if (idxs.length > 1) {
+                        // encore une égalité → on réduit la liste aux ex æquo (dans tiedCells)
+                        tiebreakActive = true;
+                        tiedCells = idxs.map(i => tiedCells[i]);
+                        btn.textContent = 'Break the tie';
+                        highlightTiedCells(tiedCells);
+                    } else {
+                        // tie résolu → victoire finale (parmi les relanceurs seulement)
+                        const winnerCell = tiedCells[idxs[0]];
+                        tiebreakActive = false;
+                        tiedCells = [];
+                        btn.textContent = 'Lancer';
+                        clearTieHighlights();
+                        celebrateWinner(winnerCell);
+                    }
+                }
+
+                btn.disabled = false;
+            }
+
+            // Lance séquentiellement chaque case
+            async function rollSequence(cellsToRoll) {
+                for (const cell of cellsToRoll) {
+                    // reset uniquement pour les cases relancées
+                    cell.querySelector('.dice-slot').innerHTML = '';
+                    cell.querySelector('.total').textContent = '';
+                    const msg = cell.querySelector('.bonus-msg'); if (msg) msg.remove();
+
+                    await animateDiceIntoCellPhased(cell, overlay);
+                    await sleep(500);
+                }
+            }
+
+            // Animation d’une case (retourne le total)
+            async function animateDiceIntoCellPhased(cell, overlayEl) {
+                const rect = cell.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const xOffsets = [-18, +18];
+                const targetXs = xOffsets.map(dx => centerX + dx);
+                const hitY = rect.top + rect.height * 0.55;
+
+                overlayEl.innerHTML = '';
+                const dice = [makeDieNumber(), makeDieNumber()];
+                for (let i = 0; i < dice.length; i++) {
+                    const die = dice[i];
+                    die.style.left = `${targetXs[i]}px`;
+                    die.style.setProperty('--dur', `${DUR_MS}ms`);
+                    die.style.setProperty('--hitY', `${hitY}px`);
+                    die.style.setProperty('--dieHalf', `22px`); // ← tient compte de la hauteur du dé (44px)
+                    overlayEl.appendChild(die);
+                }
+
+                // Lancer l’anim quad
+                for (const die of dice) die.classList.add('fall-bounce-quad');
+
+                // Changement de chiffres aux impacts
+                const t1 = setTimeout(() => updateFacesRandom(dice), T1_MS);
+                const t2 = setTimeout(() => updateFacesRandom(dice), T2_MS);
+                const t3 = setTimeout(() => updateFacesRandom(dice), T3_MS);
+
+                // Dernier impact → fige + affiche total
+                const finalFaces = [d6(), d6()];
+                const tfinal = setTimeout(() => {
+                    fixFinalFaces(dice, finalFaces);
+                    showTotalAndMessage(cell, finalFaces);
+                }, TFINAL);
+
+                await sleep(DUR_MS + HOLD_ON_OVERLAY_MS + 20);
+                [t1, t2, t3, tfinal].forEach(clearTimeout);
+
+                // Déposer les dés figés dans la case (côte à côte)
+                const slot = cell.querySelector('.dice-slot');
+                slot.innerHTML = '';
+                const row = document.createElement('div');
+                row.className = 'dice-row';
+                for (const die of dice) {
+                    die.classList.remove('fall-bounce-quad', 'face-pop');
+                    die.style.animation = 'none';
+                    die.style.transform = 'none';
+                    die.style.position = 'static';
+                    row.appendChild(die);
+                }
+                slot.appendChild(row);
+
+                return finalFaces[0] + finalFaces[1];
+            }
+
+            // --- Faces & résultats ---
+            function updateFacesRandom(diceEls) {
+                for (const die of diceEls) {
+                    die.textContent = String(d6());
+                    die.classList.remove('face-pop'); void die.offsetWidth; die.classList.add('face-pop');
+                }
+            }
+            function fixFinalFaces(diceEls, faces) {
+                for (let i = 0; i < diceEls.length; i++) {
+                    const die = diceEls[i];
+                    die.textContent = String(faces[i]);
+                    die.classList.remove('face-pop'); void die.offsetWidth; die.classList.add('face-pop');
+                }
+            }
+            function showTotalAndMessage(cell, faces) {
+                const totalEl = cell.querySelector('.total');
+                const total = faces[0] + faces[1];
+                totalEl.textContent = String(total);
+
+                let msg = "";
+                if (faces[0] === 1 && faces[1] === 1) msg = "T’a tu callé ton snake eyes ?";
+                else if (faces[0] === 6 && faces[1] === 6) msg = "Fuck yeah!!";
+
+                if (msg) {
+                    const bonus = document.createElement('div');
+                    bonus.className = 'bonus-msg';
+                    bonus.textContent = msg;
+                    const totalNode = cell.querySelector('.total');
+                    cell.querySelector('.cell-inner').insertBefore(bonus, totalNode);
+                }
+            }
+
+            // --- Helpers tie-break corrigés ---
+            function readTotalsFor(cells) {
+                return cells.map(cell => parseInt(cell.querySelector('.total').textContent || '-9999', 10));
+            }
+            function findTies(values) {
+                const max = Math.max(...values);
+                const idxs = [];
+                for (let i = 0; i < values.length; i++) {
+                    if (values[i] === max) idxs.push(i);
+                }
+                return { max, idxs };
+            }
+            function highlightTiedCells(cells) {
+                for (const c of CELLS) c.classList.remove('tie');
+                for (const c of cells) c.classList.add('tie');
+            }
+            function clearTieHighlights() {
+                for (const c of CELLS) c.classList.remove('tie');
+            }
+
+            function resetAllCells() {
+                for (const cell of CELLS) {
+                    cell.querySelector('.dice-slot').innerHTML = '';
+                    cell.querySelector('.total').textContent = '';
+                    const msg = cell.querySelector('.bonus-msg'); if (msg) msg.remove();
+                }
+            }
+
+            function clearWinnerHighlight() {
+                for (const c of CELLS) {
+                    c.classList.remove('winner');
+                    const fw = c.querySelector('.fireworks');
+                    if (fw) fw.remove();
+                }
+            }
+
+            function makeDieNumber() {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = String(d6());
+                return die;
+            }
+
+            // --- Célébration du gagnant ---
+            function celebrateWinner(cell) {
+                clearWinnerHighlight();
+                cell.classList.add('winner');
+
+                // place le conteneur dans .cell-inner pour qu'il soit au-dessus du contenu
+                const host = cell.querySelector('.cell-inner') || cell;
+                const fw = document.createElement('div');
+                fw.className = 'fireworks';
+                host.appendChild(fw);
+
+                // centre du conteneur d’accueil (pas besoin de getBoundingClientRect ici)
+                const hostRect = host.getBoundingClientRect();
+                const cx = hostRect.width / 2;
+                const cy = hostRect.height / 2;
+
+                const count = 28 + Math.floor(Math.random() * 10); // un peu plus dense
+                for (let i = 0; i < count; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'spark';
+
+                    // trajectoire polaire random
+                    const angle = Math.random() * 2 * Math.PI;
+                    const distance = 50 + Math.random() * 80; // +large pour bien voir
+                    const dx = Math.cos(angle) * distance + 'px';
+                    const dy = Math.sin(angle) * distance + 'px';
+
+                    // point de départ = centre visuel du host
+                    spark.style.left = cx + 'px';
+                    spark.style.top = cy + 'px';
+                    spark.style.setProperty('--dx', dx);
+                    spark.style.setProperty('--dy', dy);
+
+                    fw.appendChild(spark);
+                }
+
+                // auto-nettoyage un peu plus tard pour laisser le temps de voir
+                setTimeout(() => fw.remove(), 1200);
+            }
+
+        })();
+        /* ===== Any number random page ===== */
+        (function () {
+            const inputNum = document.getElementById('max-number');
+            const inputRange = document.getElementById('max-number-slider');
+            const btnRoll = document.getElementById('btn-roll-any');
+            const resultEl = document.getElementById('any-roll-result');
+
+            if (!inputNum || !inputRange || !btnRoll || !resultEl) return;
+
+            // Synchronisation et validation bornée (1–50)
+            const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
+            function syncFromNumber() {
+                const n = clamp(parseInt(inputNum.value, 10) || 1, 1, 50);
+                inputNum.value = String(n);
+                inputRange.value = String(clamp(n, 1, 50));
+            }
+
+            function syncFromRange() {
+                const n = clamp(parseInt(inputRange.value, 10) || 1, 1, 50);
+                inputRange.value = String(n);
+                inputNum.value = String(n);
+            }
+
+            syncFromNumber();
+            inputNum.addEventListener('input', syncFromNumber);
+            inputRange.addEventListener('input', syncFromRange);
+
+            // Action du bouton "Roll"
+            btnRoll.addEventListener('click', () => {
+                const max = clamp(parseInt(inputNum.value, 10) || 1, 1, 50);
+                const val = Math.floor(Math.random() * max) + 1;
+
+                // Animation d’apparition du résultat
+                resultEl.style.opacity = 0;
+                resultEl.style.transform = 'scale(0.7)';
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        resultEl.textContent = val;
+                        resultEl.style.transition = 'all 0.3s ease';
+                        resultEl.style.opacity = 1;
+                        resultEl.style.transform = 'scale(1)';
+                    }, 120);
+                });
+            });
+
+            // Réinitialiser le slider à l’ouverture de la page
+            window.addEventListener('hashchange', () => {
+                if (location.hash === '#any-number-random') syncFromNumber();
+            });
+        })();
+
+        (function () {
+            const btnOpen = document.getElementById('open-creature-sheet');
+            const sheet = document.getElementById('creature-sheet');
+            const backdrop = sheet?.querySelector('[data-close]');
+            const closeBtn = sheet?.querySelector('.sheet__close');
+            const grid = document.getElementById('creature-grid');
+            const inputHidden = document.getElementById('creature');
+            const inputDisplay = document.getElementById('creature-display');
+
+            if (!btnOpen || !sheet || !grid || !inputHidden || !inputDisplay) return;
+
+            const open = () => {
+                sheet.classList.add('open');
+                sheet.setAttribute('aria-hidden', 'false');
+                // bloquer le scroll arrière-plan
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+            };
+            const close = () => {
+                sheet.classList.remove('open');
+                sheet.setAttribute('aria-hidden', 'true');
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+            };
+
+            btnOpen.addEventListener('click', open);
+            backdrop?.addEventListener('click', close);
+            closeBtn?.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sheet.classList.contains('open')) close();
+            });
+
+            // Sélection d’une carte → renseigne le champ + ferme le sheet
+            grid.addEventListener('click', (e) => {
+                const card = e.target.closest('.creature-card');
+                if (!card) return;
+
+                grid.querySelectorAll('.creature-card.selected').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+
+                const value = card.dataset.value || card.querySelector('.card-title')?.textContent?.trim() || '';
+                inputHidden.value = value;
+                inputDisplay.value = value;
+
+                close();
+            });
+
+            // Si on rouvre le sheet, garder la sélection visuelle en mémoire
+            btnOpen.addEventListener('click', () => {
+                const value = inputHidden.value;
+                grid.querySelectorAll('.creature-card').forEach(el => {
+                    el.classList.toggle('selected', (el.dataset.value === value));
+                });
+            });
+        })();
+
+        (function () {
+            const form = document.getElementById('form-shard-maths');
+            if (!form) return;
+
+            const $creature = document.getElementById('creature');   // hidden (valeur text du nom)
+            const $opponents = document.getElementById('opponents');  // select
+            const $shards = document.getElementById('shards');     // select
+
+            const toKey = (s) => (s || '').toLowerCase().trim().replace(/\s+/g, '-');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // 1) Lire les 3 valeurs
+                const creatureName = ($creature.value || '').trim();
+                const nbOpponents = parseInt($opponents.value, 10);  // <-- exposé pour tes calculs
+                const nbShards = parseInt($shards.value, 10);     // <-- exposé pour tes calculs
+
+                // 2) Validation minimale
+                const missing = [];
+                if (!creatureName) missing.push('une créature');
+                if (!nbOpponents) missing.push('le nombre d’opponents');
+                if (!nbShards) missing.push('le nombre de shards');
+
+                if (missing.length) {
+                    alert(`Veuillez choisir ${missing.join(', ')}.`);
+                    return;
+                }
+
+                // 3) Normaliser le nom pour le switch
+                const creatureKey = toKey(creatureName);
+
+                // 4) Squelette switch — AUCUN calcul ici.
+                //    Tu pourras remplir chaque case plus tard en utilisant nbOpponents et nbShards.
+                switch (creatureKey) {
+                    case 'soltari-champion': {
+                        const bonus = nbShards;
+                        const basePower = 2;
+                        const baseToughness = 2;
+                        const power = basePower + bonus;
+                        const toughness = baseToughness + bonus;
+
+                        const totalDamage = nbShards * power;
+
+                        const resultHTML = `
+                            <div class="line">Nombre de créatures : <strong>${nbShards}</strong></div>
+                            <div class="line">Anthem : <strong>+${bonus}/+${bonus}</strong></div>
+                            <div class="line">Power et Toughness : <strong>${power}/${toughness}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${totalDamage}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = resultHTML;
+                        box.classList.remove('show');
+                        void box.offsetWidth;
+                        box.classList.add('show');
+                        break;
+                    }
+
+
+                    case 'ultramarines-honour-guard': {
+                        const bonus = nbShards;
+                        const basePower = 2;
+                        const baseToughness = 2;
+                        const power = basePower + bonus;
+                        const toughness = baseToughness + bonus;
+
+                        const totalDamage = nbShards * power;
+
+                        const resultHTML = `
+                            <div class="line">Nombre de créatures : <strong>${nbShards}</strong></div>
+                            <div class="line">Anthem : <strong>+${bonus}/+${bonus}</strong></div>
+                            <div class="line">Power et Toughness : <strong>${power}/${toughness}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${totalDamage}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = resultHTML;
+                        box.classList.remove('show');
+                        void box.offsetWidth;
+                        box.classList.add('show');
+                        break;
+                    }
+
+                    case 'skyhunter-strike-force': {
+                        const instances = nbShards;
+                        const bonus = instances * nbOpponents;
+
+                        const basePower = 2;
+                        const baseToughness = 2;
+
+                        const power = basePower + bonus;
+                        const toughness = baseToughness + bonus;
+
+                        const totalDamage = nbShards * power;
+
+                        const result = `
+                            <div class="line">Nombre de créatures : <strong>${nbShards}</strong></div>
+                            <div class="line">Anthem : <strong>+${bonus}/+${bonus}</strong></div>
+                            <div class="line">Power et Toughness : <strong>${power}/${toughness}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${totalDamage}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;
+                        box.classList.add('show');
+                        break;
+                    }
+
+                    case 'curiosity-crafter': {
+                        // Chaque shard donne une instance de "pioche une carte".
+                        // Les instances se cumulent : avec nbShards shards,
+                        // chaque créature qui connecte fait piocher nbShards cartes.
+                        const drawPerCreature = nbShards;
+                        const basePower = 2;
+                        const totalPotentialDraw = nbShards * nbShards; // si toutes les nbShards créatures connectent
+
+                        const result = `
+                            <div class="line">Draw par créature qui connecte : <strong>${drawPerCreature}</strong></div>
+                            <div class="line">Total draw potentiel : <strong>${totalPotentialDraw}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${basePower * nbShards}</strong></div>
+
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;     // reset animation
+                        box.classList.add('show');
+                        break;
+                    }
+
+
+                    case 'enduring-curiosity': {
+                        // Chaque shard donne une instance de "pioche une carte".
+                        // Les instances se cumulent : avec nbShards shards,
+                        // chaque créature qui connecte fait piocher nbShards cartes.
+                        const drawPerCreature = nbShards;
+                        const basePower = 2;
+                        const totalPotentialDraw = nbShards * nbShards; // si toutes les nbShards créatures connectent
+
+                        const result = `
+                            <div class="line">Draw par créature qui connecte : <strong>${drawPerCreature}</strong></div>
+                            <div class="line">Total draw potentiel : <strong>${totalPotentialDraw}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${basePower * nbShards}</strong></div>
+
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;     // reset animation
+                        box.classList.add('show');
+                        break;
+                    }
+
+                    case 'dream-trawler': {
+                        // Données de base
+                        const basePower = 3;
+                        const baseToughness = 5;
+
+                        // 1 carte pigée par Dream Trawler qui attaque
+                        const cardsDrawn = nbShards;
+
+                        // Chaque carte piochée donne +1/+0 à CHAQUE Dream Trawler
+                        const bonusPowerPerDT = cardsDrawn;
+
+                        // Stats finales par Dream Trawler pour ce tour d’attaque
+                        const power = basePower + bonusPowerPerDT;
+                        const toughness = baseToughness;
+
+                        // Lifelink : gain de vie = power si la créature connecte
+                        const lifeGainPerDT = power;
+                        const totalLifeGain = nbShards * lifeGainPerDT;
+
+                        const result = `
+                            <div class="line">Stats par Dream Trawler : <strong>${power}/${toughness}</strong></div>
+                            <div class="line">Cartes pigées : <strong>${cardsDrawn}</strong></div>
+                            <div class="line">Total de vie gagné (si tout connecte) : <strong>${totalLifeGain}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;     // reset animation
+                        box.classList.add('show');
+                        break;
+                    }
+                    case 'nesting-dovehawk': {
+                        const basePower = 2;
+                        const baseToughness = 2;
+
+                        const populates = nbShards;
+                        const bonus = nbShards;
+
+                        const power = basePower + bonus;
+                        const toughness = baseToughness + bonus;
+
+                        const totalDamage = nbShards * power;
+
+                        const result = `
+                            <div class="line">Nombre de populates possibles : <strong>${populates}</strong></div>
+                            <div class="line">Nombre total de +1/+1 gagnés : <strong>${bonus}</strong></div>
+                            <div class="line">Power et Toughness : <strong>${power}/${toughness}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${totalDamage}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;
+                        box.classList.add('show');
+                        break;
+                    }
+                    case 'hero-of-bladehold': {
+                        const basePowerHero = 3;
+                        const baseToughnessHero = 4;
+                        const basePowerToken = 1;
+                        const baseToughnessToken = 1;
+
+                        const nbHeroes = nbShards;
+                        const tokensPerHero = 2;
+                        const nbTokens = nbHeroes * tokensPerHero;
+
+                        // Battle cry : +1/+0 aux AUTRES créatures attaquantes
+                        const heroBonusPower = Math.max(0, nbHeroes - 1);
+                        const tokenBonusPower = nbHeroes;
+
+                        const heroPower = basePowerHero + heroBonusPower;
+                        const heroToughness = baseToughnessHero;
+
+                        const tokenPower = basePowerToken + tokenBonusPower;
+                        const tokenToughness = baseToughnessToken;
+
+                        const totalDamageHeroes = nbHeroes * heroPower;
+                        const totalDamageTokens = nbTokens * tokenPower;
+                        const totalDamage = totalDamageHeroes + totalDamageTokens;
+
+                        const result = `
+                            <div class="line">Héros de Bladehold : <strong>${nbHeroes}</strong> (${heroPower}/${heroToughness})</div>
+                            <div class="line">Tokens créés : <strong>${nbTokens}</strong> (${tokenPower}/${tokenToughness})</div>
+                            <div class="line">Total dégâts — Héros : <strong>${totalDamageHeroes}</strong></div>
+                            <div class="line">Total dégâts — Tokens : <strong>${totalDamageTokens}</strong></div>
+                            <div class="line">Total de dégâts potentiels : <strong>${totalDamage}</strong></div>
+                        `;
+
+                        const box = document.getElementById('shard-result');
+                        box.innerHTML = result;
+                        box.classList.remove('show');
+                        void box.offsetWidth;
+                        box.classList.add('show');
+                        break;
+                    }
+
+                    default:
+                        // TODO: fallback si non mappée (facultatif)
+                        break;
+                }
+
+                // Pour l’instant, rien n’est calculé ni affiché.
+                // Tu me donneras les règles et j’implanterai chaque case.
+                // console.log({ creatureName, nbOpponents, nbShards });
+            });
+        })();
+
+    </script>
+</body>
+
+</html>
